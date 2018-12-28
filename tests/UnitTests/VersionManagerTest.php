@@ -2,25 +2,26 @@
 
 namespace PhpJsonVersioning\Tests\UnitTests;
 
-use Mockery;
 use PhpJsonVersioning\Tests\TestCase;
 use PhpSchema\ValidationException;
 use PhpJsonVersioning\Patch;
 use PhpJsonVersioning\Commit;
+use PhpJsonVersioning\Record;
 use PhpJsonVersioning\Document;
 use PhpJsonVersioning\VersionManager;
 use PhpJsonVersioning\Services\JsonPatch;
 
 class VersionManagerTest extends TestCase
 {
-    protected $patch;
+    protected $patcher;
 
     protected $commits;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->patch = Patch::fromJson('[{"value":"Aaron","op":"test","path":"\/name"},{"value":"James","op":"replace","path":"\/name"}]');
+
+        // $this->patch = Patch::fromJson('[{"value":"Aaron","op":"test","path":"\/name"},{"value":"James","op":"replace","path":"\/name"}]');
 
         $this->commits = [];
         $this->commits[] = Commit::create(new Patch([
@@ -54,53 +55,40 @@ class VersionManagerTest extends TestCase
 
         $this->patcher = new JsonPatch();
         $this->manager = new VersionManager($this->patcher);
-    }
 
-    protected function mockCommit(int $timestamp = 0)
-    {
-        $commit = Mockery::mock(Commit::class);
-        $commit->shouldReceive('timestamp')->andReturn($timestamp);
-
-        return $commit;
-    }
-
-    /** @test */
-    public function it_loads_commits_in_order_and_gets_versions()
-    {
-        $commits = [];
-        $commits[] = $this->commits[0];
-        $commits[] = $this->commits[2];
-        $commits[] = $this->commits[1];
-
-        $this->manager->load(...$commits);
-
-        $this->assertEquals("one", $this->manager->getVersion(1)->toArray()['version']);
-        $this->assertEquals("two", $this->manager->getVersion(2)->toArray()['version']);
-        $this->assertEquals("three", $this->manager->getVersion(3)->toArray()['version']);
-        $this->assertEquals("three", $this->manager->getLatest()->toArray()['version']);
+        $this->manager->load(Record::create($this->commits));
     }
 
     /** @test */
     public function it_gives_history()
     {
-        $this->manager->load(...$this->commits);
-
         $history = $this->manager->getHistory();
 
         $this->assertEquals(1, $history[0]['version']);
-        $this->assertEquals("one", $history[0]['document']->toArray()['version']);
+        $this->assertEquals("one", $history[0]['document']['version']);
     }
 
     /** @test */
     public function it_saves_a_new_commit()
     {
-        $this->manager->load(...$this->commits);
         $this->assertEquals(3, count($this->manager->getHistory()));
         
         // save a new version
         $this->manager->save(new Document(['version' => 'four']), "version four");
 
-        $this->assertEquals("four", $this->manager->getLatest()->toArray()['version']);
+        $this->assertEquals("four", $this->manager->getLatest()['version']);
         $this->assertEquals("version four", $this->manager->getHistory()[3]['comment']);
+    }
+
+    /** @test */
+    public function it_returns_the_mutated_record()
+    {
+        // save a new version
+        $this->manager->save(new Document(['version' => 'four']), "version four");
+
+        $record = $this->manager->getRecord();
+
+        $this->assertInstanceOf(Record::class, $record);
+        $this->assertEquals("four", $record->commits()[3]->patch()[1]->value);
     }
 }

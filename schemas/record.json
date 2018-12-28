@@ -1,4 +1,10 @@
 {
-    "type": "array",
-    "items": {"$ref": "commit.json"}
+    "type": "object",
+    "properties": {
+        "commits": {
+            "type": "array",
+            "items": {"$ref": "commit.json"}
+        }
+    },
+    "required": ["commits"]
 }

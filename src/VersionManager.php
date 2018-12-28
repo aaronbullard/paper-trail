@@ -9,7 +9,7 @@ class VersionManager
 {
     protected $patcher;
 
-    protected $commits = [];
+    protected $record;
 
     protected $versions = [];
 
@@ -18,15 +18,9 @@ class VersionManager
         $this->patcher = $patcher;
     }
 
-    public function load(Commit ...$commits): VersionManager
+    public function load(Record $record): VersionManager
     {
-        try {
-            static::validateIsSorted(...$commits);
-        } catch (DomainException $e) {
-            $commits = static::sortCommits(...$commits);
-        }
-        
-        $this->commits = $commits;
+        $this->record = $record;
 
         $this->buildVersions();
 
@@ -37,33 +31,20 @@ class VersionManager
     {
         $patch = $this->patcher->diff($this->getLatest(), $doc);
 
-        $this->commits[] = Commit::create($patch, $comment);
+        $commit = Commit::create($patch, $comment);
+
+        $this->record->addCommit($commit);
 
         $this->buildVersions();
 
         return $this;
     }
 
-    public function getLatest(): Document
-    {
-        return $this->getVersion(count($this->commits));
-    }
-
-    public function getVersion(int $version): Document
-    {
-        return $this->versions[($version - 1)]['document'];
-    }
-
-    public function getHistory(): array
-    {
-        return $this->versions;
-    }
-
     protected function buildVersions(): void
     {
         $src = new Document();
 
-        foreach($this->commits as $index => $commit){
+        foreach($this->record->commits() as $index => $commit){
             $dst = $this->patcher->apply($src, $commit->patch());
 
             $this->versions[$index] = [
@@ -77,28 +58,23 @@ class VersionManager
         }
     }
 
-    protected static function validateIsSorted(Commit ...$commits): void
+    public function getVersion(int $version): Document
     {
-        $lastTimestamp = 0;
-
-        foreach($commits as $commit)
-        {
-            $timestamp = $commit->timestamp();
-
-            if($timestamp < $lastTimestamp){
-                throw new DomainException("Commits are out of order");
-            }
-
-            $lastTimestamp = $timestamp;
-        }
+        return $this->versions[($version - 1)]['document'];
     }
 
-    protected static function sortCommits(Commit ...$commits): array
+    public function getLatest(): Document
     {
-        usort($commits, function($a, $b){
-            return ($a->timestamp() < $b->timestamp()) ? -1 : 1;
-        });
+        return $this->getVersion(count($this->record->commits()));
+    }
 
-        return $commits;
+    public function getHistory(): array
+    {
+        return $this->versions;
+    }
+
+    public function getRecord(): Record
+    {
+        return $this->record;
     }
 }

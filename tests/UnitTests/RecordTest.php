@@ -42,6 +42,11 @@ class RecordTest extends TestCase
             ]
         ]));
 
+        // Create more detailed timestamps
+        foreach($this->commits as $index => $commit){
+            $commit->timestamp($index);
+        }
+
         $this->record = Record::create($this->commits);
     }
 
@@ -52,7 +57,7 @@ class RecordTest extends TestCase
 
         $decoded = json_decode($json, 1);
 
-        $this->assertEquals("one", $decoded[0]['patch'][0]['value']);
+        $this->assertEquals("one", $decoded['commits'][0]['patch'][0]['value']);
     }
 
     /** @test */
@@ -62,6 +67,37 @@ class RecordTest extends TestCase
 
         $record = Record::fromJson($json);
 
-        $this->assertEquals("one", $record[0]->patch()[0]['value']);
+        $this->assertEquals("one", $record->commits()[0]->patch()[0]['value']);
+    }
+
+    /** @test */
+    public function it_can_add_commits()
+    {
+        $commit = Commit::create(new Patch([
+            [
+                "op" => "replace",
+                "path" => "/version",
+                "value" => "four"
+            ]
+        ]));
+        
+        $this->record->addCommit($commit);
+
+        $this->assertCount(4, $this->record->commits());
+    }
+
+    /** @test */
+    public function it_sorts_commits_by_timestamp()
+    {
+        $commits = [];
+        $commits[] = $this->commits[0];
+        $commits[] = $this->commits[2];
+        $commits[] = $this->commits[1];
+
+        $record = Record::create($commits);
+
+        $this->assertEquals(0, $record->commits()[0]->timestamp());
+        $this->assertEquals(1, $record->commits()[1]->timestamp());
+        $this->assertEquals(2, $record->commits()[2]->timestamp());
     }
 }
