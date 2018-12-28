@@ -17,6 +17,10 @@ class VersionManagerTest extends TestCase
 
     protected $commits;
 
+    protected $record;
+
+    protected $manager;
+
     protected function setUp()
     {
         parent::setUp();
@@ -30,11 +34,25 @@ class VersionManagerTest extends TestCase
         $this->commits = array_map(function($patch_data, $version){
             return Commit::create($version + 1, new Patch([$patch_data]));
         }, $patches, array_keys($patches));
+
+        $this->record = Record::create($this->commits);
  
         $this->patcher = new JsonPatch();
-        $this->manager = new VersionManager($this->patcher);
 
-        $this->manager->load(Record::create($this->commits));
+        $this->manager = new VersionManager($this->patcher);
+        $this->manager->load($this->record);
+    }
+
+    /** @test */
+    public function it_has_a_helper_constructor()
+    {
+        // with no record
+        $manager = VersionManager::create();
+        $this->assertCount(0, $manager->getRecord()->commits());
+
+        // with record
+        $manager = VersionManager::create($this->record);
+        $this->assertCount(3, $manager->getRecord()->commits());
     }
 
     /** @test */

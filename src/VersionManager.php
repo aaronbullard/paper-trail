@@ -3,6 +3,7 @@
 namespace PhpJsonVersioning;
 
 use PhpJsonVersioning\Contracts\Patcher;
+use PhpJsonVersioning\Services\JsonPatch;
 
 class VersionManager
 {
@@ -12,10 +13,17 @@ class VersionManager
 
     protected $versions = [];
 
-    public function __construct(Patcher $patcher)
+    public function __construct(Patcher $patcher, Record $record = null)
     {
         $this->patcher = $patcher;
-        $this->record = Record::create();
+        $this->record = $record ?? Record::create();
+
+        $this->buildVersions();
+    }
+
+    public static function create(Record $record = null): VersionManager
+    {
+        return new VersionManager(new JsonPatch(), $record);
     }
 
     public function load(Record $record): VersionManager

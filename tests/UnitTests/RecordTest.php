@@ -54,14 +54,14 @@ class RecordTest extends TestCase
     public function it_can_add_commits()
     {
         $this->record->createCommit(
-            new Patch([["op" => "replace", "path" => "/version","value" => "four"]])
+            new Patch([["op" => "replace", "path" => "/version", "value" => "four"]])
         );
 
         $this->assertCount(4, $this->record->commits());
     }
 
     /** @test */
-    public function it_sorts_commits_by_timestamp()
+    public function it_sorts_commits_by_version()
     {
         $commits = [];
         $commits[] = $this->commits[0];
