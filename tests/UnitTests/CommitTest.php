@@ -20,7 +20,7 @@ class CommitTest extends TestCase
     /** @test */
     public function it_implements_create()
     {
-        $commit = Commit::create($this->patch);
+        $commit = Commit::create(1, $this->patch);
 
         $this->assertInstanceOf(Commit::class, $commit);
     }
@@ -28,7 +28,7 @@ class CommitTest extends TestCase
     /** @test */
     public function it_implements_fromJson()
     {
-        $c = Commit::create($this->patch);
+        $c = Commit::create(1, $this->patch);
         $commitAsJson = $c->toJson();
 
         $commit = Commit::fromJson($commitAsJson);
@@ -41,7 +41,7 @@ class CommitTest extends TestCase
     /** @test */
     public function it_gets_the_timestamp()
     {
-        $commit = Commit::create($this->patch);
+        $commit = Commit::create(1, $this->patch);
 
         $this->assertTrue( is_int($commit->timestamp()) );
     }
@@ -49,7 +49,7 @@ class CommitTest extends TestCase
     /** @test */
     public function it_gets_the_patch()
     {
-        $commit = Commit::create($this->patch);
+        $commit = Commit::create(1, $this->patch);
 
         $this->assertEquals($this->patch, $commit->patch());
     }

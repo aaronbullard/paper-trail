@@ -1,8 +1,9 @@
 {
     "type": "object",
     "properties": {
+        "version": {"type": "integer", "minimum": 0},
         "patch": {"$ref": "json-patch.json"},
-        "timestamp": {"type": "integer"},
+        "timestamp": {"type": "integer", "minimum": 0},
         "comment": {
             "oneOf": [
                 {"type": "string"},
@@ -10,5 +11,5 @@
             ]
         }
     },
-    "required": ["patch", "timestamp"]
+    "required": ["version", "patch", "timestamp"]
 }

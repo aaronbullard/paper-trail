@@ -16,6 +16,7 @@ class VersionManager
     public function __construct(Patcher $patcher)
     {
         $this->patcher = $patcher;
+        $this->record = Record::create();
     }
 
     public function load(Record $record): VersionManager
@@ -27,40 +28,42 @@ class VersionManager
         return $this;
     }
 
+    protected function buildVersions(): void
+    {
+        $src = new Document();
+
+        foreach($this->record->commits() as $index => $commit){
+            $doc = $this->patcher->apply($src, $commit->patch());
+
+            $this->versions[$index] = [
+                'version' => $commit->version(),
+                'timestamp' => $commit->timestamp(),
+                'comment' => $commit->comment(),
+                'document' => $doc->toArray()
+            ];
+
+            $src = $doc;
+        }
+    }
+
     public function save(Document $doc, string $comment = null): VersionManager
     {
         $patch = $this->patcher->diff($this->getLatest(), $doc);
 
-        $commit = Commit::create($patch, $comment);
-
-        $this->record->addCommit($commit);
+        $this->record->createCommit($patch, $comment);
 
         $this->buildVersions();
 
         return $this;
     }
 
-    protected function buildVersions(): void
-    {
-        $src = new Document();
-
-        foreach($this->record->commits() as $index => $commit){
-            $dst = $this->patcher->apply($src, $commit->patch());
-
-            $this->versions[$index] = [
-                'version' => $index + 1,
-                'timestamp' => $commit->timestamp(),
-                'comment' => $commit->comment(),
-                'document' => $dst
-            ];
-
-            $src = $dst;
-        }
-    }
-
     public function getVersion(int $version): Document
     {
-        return $this->versions[($version - 1)]['document'];
+        if(count($this->versions)){
+            return new Document($this->versions[($version - 1)]['document']);
+        }
+
+        return new Document();
     }
 
     public function getLatest(): Document
@@ -68,13 +71,13 @@ class VersionManager
         return $this->getVersion(count($this->record->commits()));
     }
 
-    public function getHistory(): array
-    {
-        return $this->versions;
-    }
-
     public function getRecord(): Record
     {
         return $this->record;
+    }
+
+    public function getHistory(): array
+    {
+        return $this->versions;
     }
 }

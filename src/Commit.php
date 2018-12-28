@@ -11,16 +11,16 @@ class Commit extends SchemaModel
 
     protected static $schema = ['$ref' => 'file://' . __DIR__ . '/../schemas/commit.json'];
 
-    public function __construct(Patch $patch, int $timestamp, string $comment = null)
+    public function __construct(int $version, Patch $patch, int $timestamp, string $comment = null)
     {
-        parent::__construct(compact('patch', 'timestamp', 'comment'));
+        parent::__construct(compact('version', 'patch', 'timestamp', 'comment'));
     }
 
-    public static function create(Patch $patch, string $comment = null): Commit
+    public static function create(int $version, Patch $patch, string $comment = null): Commit
     {
         $timestamp = time();
 
-        return new static($patch, $timestamp, $comment);
+        return new static($version, $patch, $timestamp, $comment);
     }
 
     public static function fromJson(string $commit): Commit
@@ -29,6 +29,6 @@ class Commit extends SchemaModel
 
         $obj = $json->toObject();
 
-        return new static(new Patch($obj->patch), $obj->timestamp, $obj->comment);
+        return new static($obj->version, new Patch($obj->patch), $obj->timestamp, $obj->comment);
     }
 }

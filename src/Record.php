@@ -16,7 +16,7 @@ class Record extends SchemaModel
         parent::__construct(compact('commits'));
     }
 
-    public static function create(array $commits): Record
+    public static function create(array $commits = []): Record
     {
         return new static(...$commits);
     }
@@ -27,6 +27,7 @@ class Record extends SchemaModel
     
         $commits = array_map(function($commit){
             return new Commit(
+                $commit['version'],
                 new Patch($commit['patch']),
                 $commit['timestamp'],
                 $commit['comment']
@@ -36,33 +37,37 @@ class Record extends SchemaModel
         return new static(...$commits);
     }
 
-    public function addCommit(Commit $commit): Record
+    public function createCommit(Patch $patch, $comment = null): Commit
     {
+        $version = count($this->commits()) + 1;
+
+        $commit = Commit::create($version, $patch, $comment);
+
         $this->commits()[] = $commit;
 
-        return $this;
+        return $commit;
     }
 
     protected static function validateIsSorted(Commit ...$commits): void
     {
-        $lastTimestamp = 0;
+        $lastVersion = 0;
 
         foreach($commits as $commit)
         {
-            $timestamp = $commit->timestamp();
+            $version = $commit->version();
 
-            if($timestamp < $lastTimestamp){
+            if($version < $lastVersion){
                 throw new DomainException("Commits are out of order");
             }
 
-            $lastTimestamp = $timestamp;
+            $lastVersion = $version;
         }
     }
 
     protected static function sortCommits(Commit ...$commits): array
     {
         usort($commits, function($a, $b){
-            return ($a->timestamp() < $b->timestamp()) ? -1 : 1;
+            return ($a->version() < $b->version()) ? -1 : 1;
         });
 
         return $commits;

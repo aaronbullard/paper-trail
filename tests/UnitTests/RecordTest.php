@@ -17,35 +17,15 @@ class RecordTest extends TestCase
     {
         parent::setUp();
 
-        $this->commits = [];
-        $this->commits[] = Commit::create(new Patch([
-            [
-                "op" => "add",
-                "path" => "/version",
-                "value" => "one"
-            ]
-        ]));
+        $patches = [
+            ["op" => "add", "path" => "/version", "value" => "one"],
+            ["op" => "replace", "path" => "/version", "value" => "two"],
+            ["op" => "replace", "path" => "/version", "value" => "three"]
+        ];
 
-        $this->commits[] = Commit::create(new Patch([
-            [
-                "op" => "replace",
-                "path" => "/version",
-                "value" => "two"
-            ]
-        ]));
-
-        $this->commits[] = Commit::create(new Patch([
-            [
-                "op" => "replace",
-                "path" => "/version",
-                "value" => "three"
-            ]
-        ]));
-
-        // Create more detailed timestamps
-        foreach($this->commits as $index => $commit){
-            $commit->timestamp($index);
-        }
+        $this->commits = array_map(function($patch_data, $version){
+            return Commit::create($version + 1, new Patch([$patch_data]));
+        }, $patches, array_keys($patches));
 
         $this->record = Record::create($this->commits);
     }
@@ -73,15 +53,9 @@ class RecordTest extends TestCase
     /** @test */
     public function it_can_add_commits()
     {
-        $commit = Commit::create(new Patch([
-            [
-                "op" => "replace",
-                "path" => "/version",
-                "value" => "four"
-            ]
-        ]));
-        
-        $this->record->addCommit($commit);
+        $this->record->createCommit(
+            new Patch([["op" => "replace", "path" => "/version","value" => "four"]])
+        );
 
         $this->assertCount(4, $this->record->commits());
     }
@@ -96,8 +70,8 @@ class RecordTest extends TestCase
 
         $record = Record::create($commits);
 
-        $this->assertEquals(0, $record->commits()[0]->timestamp());
-        $this->assertEquals(1, $record->commits()[1]->timestamp());
-        $this->assertEquals(2, $record->commits()[2]->timestamp());
+        $this->assertEquals(1, $record->commits()[0]->version());
+        $this->assertEquals(2, $record->commits()[1]->version());
+        $this->assertEquals(3, $record->commits()[2]->version());
     }
 }

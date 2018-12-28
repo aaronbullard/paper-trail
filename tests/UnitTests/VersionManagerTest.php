@@ -21,38 +21,16 @@ class VersionManagerTest extends TestCase
     {
         parent::setUp();
 
-        // $this->patch = Patch::fromJson('[{"value":"Aaron","op":"test","path":"\/name"},{"value":"James","op":"replace","path":"\/name"}]');
+        $patches = [
+            ["op" => "add", "path" => "/version", "value" => "one"],
+            ["op" => "replace", "path" => "/version", "value" => "two"],
+            ["op" => "replace", "path" => "/version", "value" => "three"]
+        ];
 
-        $this->commits = [];
-        $this->commits[] = Commit::create(new Patch([
-            [
-                "op" => "add",
-                "path" => "/version",
-                "value" => "one"
-            ]
-        ]));
-
-        $this->commits[] = Commit::create(new Patch([
-            [
-                "op" => "replace",
-                "path" => "/version",
-                "value" => "two"
-            ]
-        ]));
-
-        $this->commits[] = Commit::create(new Patch([
-            [
-                "op" => "replace",
-                "path" => "/version",
-                "value" => "three"
-            ]
-        ]));
-
-        // Create more detailed timestamps
-        foreach($this->commits as $index => $commit){
-            $commit->timestamp($index);
-        }
-
+        $this->commits = array_map(function($patch_data, $version){
+            return Commit::create($version + 1, new Patch([$patch_data]));
+        }, $patches, array_keys($patches));
+ 
         $this->patcher = new JsonPatch();
         $this->manager = new VersionManager($this->patcher);
 
@@ -90,5 +68,30 @@ class VersionManagerTest extends TestCase
 
         $this->assertInstanceOf(Record::class, $record);
         $this->assertEquals("four", $record->commits()[3]->patch()[1]->value);
+    }
+
+    /** @test */
+    public function it_creates_a_record_for_first_save()
+    {
+        $manager = new VersionManager($this->patcher);
+
+        $manager->save(new Document(['version' => 'one']), "version one");
+
+        $this->assertInstanceOf(Record::class, $manager->getRecord());
+        $this->assertCount(1, $manager->getRecord()->commits());
+        $this->assertEquals("version one", $manager->getRecord()->commits()[0]->comment());
+    }
+
+    /** @test */
+    public function mutating_a_version_for_saving()
+    {
+        $doc = $this->manager->getLatest();
+
+        $doc['version'] = "four";
+
+        $this->manager->save($doc);
+        $doc = $this->manager->getLatest();
+
+        $this->assertEquals("four", $doc['version']);
     }
 }
