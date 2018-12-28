@@ -4,28 +4,28 @@ namespace PhpJsonVersioning\Services;
 
 use Swaggest\JsonDiff\JsonDiff as SwaggestJsonDiff;
 use Swaggest\JsonDiff\JsonPatch as SwaggestJsonPatch;
-use PhpJsonVersioning\Json;
 use PhpJsonVersioning\Patch;
+use PhpJsonVersioning\Document;
 use PhpJsonVersioning\Contracts\Patcher;
 
 class JsonPatch implements Patcher
 {
-    public function apply(Json $src, Patch $patch): Json
+    public function apply(Document $src, Patch $patch): Document
     {
-        $patch = SwaggestJsonPatch::import($patch->toObject());
+        $patch = SwaggestJsonPatch::import($patch->toArray());
 
-        $clone = $src->toObject();
+        $clone = $src->toArray();
 
         $patch->apply($clone);
 
-        return new Json(json_encode($clone));
+        return new Document($clone);
     }
 
-    public function diff(Json $src, Json $dst): Patch
+    public function diff(Document $src, Document $dst): Patch
     {
         $diff = new SwaggestJsonDiff(
-            $src->toObject(),
-            $dst->toObject()
+            $src->toArray(),
+            $dst->toArray()
         );
 
         return new Patch($diff->getPatch()->jsonSerialize());

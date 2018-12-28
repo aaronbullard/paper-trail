@@ -2,12 +2,12 @@
 
 namespace PhpJsonVersioning\Contracts;
 
-use PhpJsonVersioning\Json;
 use PhpJsonVersioning\Patch;
+use PhpJsonVersioning\Document;
 
 interface Patcher
 {
-    public function apply(Json $src, Patch $patch): Json;
+    public function apply(Document $src, Patch $patch): Document;
 
-    public function diff(Json $src, Json $dst): Patch;
+    public function diff(Document $src, Document $dst): Patch;
 }

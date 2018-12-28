@@ -5,9 +5,9 @@ namespace PhpJsonVersioning\Tests\UnitTests;
 use Mockery;
 use PhpJsonVersioning\Tests\TestCase;
 use PhpSchema\ValidationException;
-use PhpJsonVersioning\Json;
 use PhpJsonVersioning\Patch;
 use PhpJsonVersioning\Commit;
+use PhpJsonVersioning\Document;
 use PhpJsonVersioning\VersionManager;
 use PhpJsonVersioning\Services\JsonPatch;
 
@@ -74,10 +74,10 @@ class VersionManagerTest extends TestCase
 
         $this->manager->load(...$commits);
 
-        $this->assertEquals("one", $this->manager->getVersion(1)->toObject()->version);
-        $this->assertEquals("two", $this->manager->getVersion(2)->toObject()->version);
-        $this->assertEquals("three", $this->manager->getVersion(3)->toObject()->version);
-        $this->assertEquals("three", $this->manager->getLatest()->toObject()->version);
+        $this->assertEquals("one", $this->manager->getVersion(1)->toArray()['version']);
+        $this->assertEquals("two", $this->manager->getVersion(2)->toArray()['version']);
+        $this->assertEquals("three", $this->manager->getVersion(3)->toArray()['version']);
+        $this->assertEquals("three", $this->manager->getLatest()->toArray()['version']);
     }
 
     /** @test */
@@ -88,7 +88,7 @@ class VersionManagerTest extends TestCase
         $history = $this->manager->getHistory();
 
         $this->assertEquals(1, $history[0]['version']);
-        $this->assertEquals("one", $history[0]['json']->toObject()->version);
+        $this->assertEquals("one", $history[0]['document']->toArray()['version']);
     }
 
     /** @test */
@@ -98,9 +98,9 @@ class VersionManagerTest extends TestCase
         $this->assertEquals(3, count($this->manager->getHistory()));
         
         // save a new version
-        $this->manager->save(new Json('{"version": "four"}'), "version four");
+        $this->manager->save(new Document(['version' => 'four']), "version four");
 
-        $this->assertEquals("four", $this->manager->getLatest()->toObject()->version);
+        $this->assertEquals("four", $this->manager->getLatest()->toArray()['version']);
         $this->assertEquals("version four", $this->manager->getHistory()[3]['comment']);
     }
 }

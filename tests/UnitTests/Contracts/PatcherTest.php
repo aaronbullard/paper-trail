@@ -2,8 +2,8 @@
 
 namespace PhpJsonVersioning\Tests\UnitTests\Contracts;
 
-use PhpJsonVersioning\Json;
 use PhpJsonVersioning\Patch;
+use PhpJsonVersioning\Document;
 use PhpJsonVersioning\Tests\TestCase;
 use PhpJsonVersioning\Contracts\Patcher;
 use PhpJsonVersioning\Services\JsonPatch;
@@ -15,8 +15,8 @@ class PatcherTest extends TestCase
         parent::setUp();
         
         $this->patcher = new JsonPatch();
-        $this->origDoc = Json::fromArray(['name' => 'Aaron']);
-        $this->newDoc = Json::fromArray(['name' => 'James']);
+        $this->origDoc = Document::create(['name' => 'Aaron']);
+        $this->newDoc = Document::create(['name' => 'James']);
         $this->jsonPatch = '[{"value":"Aaron","op":"test","path":"\/name"},{"value":"James","op":"replace","path":"\/name"}]';
     }
 
@@ -40,7 +40,7 @@ class PatcherTest extends TestCase
     {
         $newDoc = $this->patcher->apply($this->origDoc, Patch::fromJson($this->jsonPatch));
 
-        $this->assertInstanceOf(Json::class, $newDoc);
+        $this->assertInstanceOf(Document::class, $newDoc);
         $this->assertEquals($this->newDoc->toJson(), $newDoc->toJson());
     }
 }

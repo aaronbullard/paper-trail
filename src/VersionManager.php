@@ -4,7 +4,6 @@ namespace PhpJsonVersioning;
 
 use DomainException;
 use PhpJsonVersioning\Contracts\Patcher;
-use PhpJsonVersioning\Exceptions\JsonException;
 
 class VersionManager
 {
@@ -34,9 +33,9 @@ class VersionManager
         return $this;
     }
 
-    public function save(Json $json, string $comment = null): VersionManager
+    public function save(Document $doc, string $comment = null): VersionManager
     {
-        $patch = $this->patcher->diff($this->getLatest(), $json);
+        $patch = $this->patcher->diff($this->getLatest(), $doc);
 
         $this->commits[] = Commit::create($patch, $comment);
 
@@ -45,14 +44,14 @@ class VersionManager
         return $this;
     }
 
-    public function getLatest(): Json
+    public function getLatest(): Document
     {
         return $this->getVersion(count($this->commits));
     }
 
-    public function getVersion(int $version): Json
+    public function getVersion(int $version): Document
     {
-        return $this->versions[($version - 1)]['json'];
+        return $this->versions[($version - 1)]['document'];
     }
 
     public function getHistory(): array
@@ -62,7 +61,7 @@ class VersionManager
 
     protected function buildVersions(): void
     {
-        $src = new Json();
+        $src = new Document();
 
         foreach($this->commits as $index => $commit){
             $dst = $this->patcher->apply($src, $commit->patch());
@@ -71,7 +70,7 @@ class VersionManager
                 'version' => $index + 1,
                 'timestamp' => $commit->timestamp(),
                 'comment' => $commit->comment(),
-                'json' => $dst
+                'document' => $dst
             ];
 
             $src = $dst;
