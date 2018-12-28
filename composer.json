@@ -12,7 +12,8 @@
         "php": "^7.1",
         "mikemccabe/json-patch-php": "^0.1.0",
         "aaronbullard/php-schema": "dev-master",
-        "swaggest/json-diff": "^3.5"
+        "swaggest/json-diff": "^3.5",
+        "mockery/mockery": "^1.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.3"

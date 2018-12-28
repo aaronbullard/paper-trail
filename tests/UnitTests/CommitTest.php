@@ -15,13 +15,12 @@ class CommitTest extends TestCase
     {
         parent::setUp();
         $this->patch = Patch::fromJson('[{"value":"Aaron","op":"test","path":"\/name"},{"value":"James","op":"replace","path":"\/name"}]');
-
     }
 
     /** @test */
     public function it_implements_create()
     {
-        $commit = Commit::create(0, $this->patch);
+        $commit = Commit::create($this->patch);
 
         $this->assertInstanceOf(Commit::class, $commit);
     }
@@ -29,7 +28,7 @@ class CommitTest extends TestCase
     /** @test */
     public function it_implements_fromJson()
     {
-        $c = Commit::create(0, $this->patch);
+        $c = Commit::create($this->patch);
         $commitAsJson = $c->toJson();
 
         $commit = Commit::fromJson($commitAsJson);
@@ -37,5 +36,21 @@ class CommitTest extends TestCase
         $this->assertInstanceOf(Commit::class, $commit);
 
         $this->assertEquals($commitAsJson, $commit->toJson());
+    }
+
+    /** @test */
+    public function it_gets_the_timestamp()
+    {
+        $commit = Commit::create($this->patch);
+
+        $this->assertTrue( is_int($commit->timestamp()) );
+    }
+
+    /** @test */
+    public function it_gets_the_patch()
+    {
+        $commit = Commit::create($this->patch);
+
+        $this->assertEquals($this->patch, $commit->patch());
     }
 }

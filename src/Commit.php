@@ -3,15 +3,17 @@
 namespace PhpJsonVersioning;
 
 use PhpSchema\Models\SchemaModel;
+use PhpSchema\Traits\MethodAccess;
 
 class Commit extends SchemaModel
 {
-    protected static $schema = [
+    use MethodAccess;
+
+    public static $schema = [
         "type" => "object",
         "properties" => [
-            "version" => ["type" => "integer"],
-            "timestamp" => ["type" => "integer"],
             "patch" => ['$ref' => 'file://' . __DIR__ . '/../schemas/json-patch.json'],
+            "timestamp" => ["type" => "integer"],
             "comment" => [
                 "oneOf" => [
                     ["type" => "string"],
@@ -19,19 +21,19 @@ class Commit extends SchemaModel
                 ]
             ]
         ],
-        "required" => ["version", "timestamp", "patch"]
+        "required" => ["patch", "timestamp"]
     ];
 
-    protected function __construct(int $version, int $timestamp, Patch $patch, string $comment = null)
+    protected function __construct(Patch $patch, int $timestamp, string $comment = null)
     {
-        parent::__construct(compact('version', 'timestamp', 'patch', 'comment'));
+        parent::__construct(compact('patch', 'timestamp', 'comment'));
     }
 
-    public static function create(int $version, Patch $patch, string $comment = null): Commit
+    public static function create(Patch $patch, string $comment = null): Commit
     {
         $timestamp = time();
 
-        return new static($version, $timestamp, $patch, $comment);
+        return new static($patch, $timestamp, $comment);
     }
 
     public static function fromJson(string $commit): Commit
@@ -40,13 +42,6 @@ class Commit extends SchemaModel
 
         $obj = $json->toObject();
 
-        return new static($obj->version, $obj->timestamp, new Patch($obj->patch), $obj->comment);
-    }
-
-    public function setComment(string $comment): Commit
-    {
-        $this->containerSet('comment', $comment);
-
-        return $this;
+        return new static(new Patch($obj->patch), $obj->timestamp, $obj->comment);
     }
 }
