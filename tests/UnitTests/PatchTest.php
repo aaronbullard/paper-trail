@@ -36,6 +36,14 @@ class PatchTest extends TestCase
     }
 
     /** @test */
+    public function it_is_array_accessible()
+    {
+        $patch = new Patch($this->patch);
+
+        $this->assertEquals('replace', $patch[0]['op']);
+    }
+
+    /** @test */
     public function it_converts_to_json()
     {
         $patch = new Patch($this->patch);

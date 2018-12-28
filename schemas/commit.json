@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties": {
+        "patch": {"$ref": "json-patch.json"},
+        "timestamp": {"type": "integer"},
+        "comment": {
+            "oneOf": [
+                {"type": "string"},
+                {"type": "null"}
+            ]
+        }
+    },
+    "required": ["patch", "timestamp"]
+}
