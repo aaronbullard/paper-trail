@@ -29,6 +29,24 @@ class CommitTest extends TestCase
     }
 
     /** @test */
+    public function it_gets_the_version()
+    {
+        $commit = Commit::create(1, $this->patch);
+
+        $this->assertEquals(1, $commit->version());
+    }
+
+    /** @test */
+    public function version_cannot_be_changed()
+    {
+        $commit = Commit::create(1, $this->patch);
+
+        $commit->version(1234);
+
+        $this->assertFalse(1234 === $commit->version());
+    }
+
+    /** @test */
     public function it_gets_the_timestamp()
     {
         $commit = Commit::create(1, $this->patch);
