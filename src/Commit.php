@@ -23,12 +23,13 @@ class Commit extends SchemaModel
         return new static($version, $patch, $timestamp, $comment);
     }
 
-    public static function fromJson(string $commit): Commit
+    public function version(): int
     {
-        $json = new Json($commit);
+        return $this->containerGet('version');
+    }
 
-        $obj = $json->toObject();
-
-        return new static($obj->version, new Patch($obj->patch), $obj->timestamp, $obj->comment);
+    public function timestamp(): int
+    {
+        return $this->containerGet('timestamp');
     }
 }

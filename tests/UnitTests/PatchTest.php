@@ -42,28 +42,4 @@ class PatchTest extends TestCase
 
         $this->assertEquals('replace', $patch[0]['op']);
     }
-
-    /** @test */
-    public function it_converts_to_json()
-    {
-        $patch = new Patch($this->patch);
-
-        $this->assertEquals($this->jsonPatch, $patch->toJson());
-    }
-
-    /** @test */
-    public function it_converts_to_string()
-    {
-        $patch = new Patch($this->patch);
-
-        $this->assertEquals($this->jsonPatch, (string) $patch);
-    }
-
-    /** @test */
-    public function it_creates_from_json()
-    {
-        $patch = Patch::fromJson($this->jsonPatch);
-
-        $this->assertEquals($this->jsonPatch, $patch->toJson());
-    }
 }

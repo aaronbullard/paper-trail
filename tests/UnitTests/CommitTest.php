@@ -3,7 +3,6 @@
 namespace PhpJsonVersioning\Tests\UnitTests;
 
 use PhpJsonVersioning\Tests\TestCase;
-use PhpSchema\ValidationException;
 use PhpJsonVersioning\Patch;
 use PhpJsonVersioning\Commit;
 
@@ -14,7 +13,11 @@ class CommitTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->patch = Patch::fromJson('[{"value":"Aaron","op":"test","path":"\/name"},{"value":"James","op":"replace","path":"\/name"}]');
+
+        $this->patch = new Patch([
+            ['value' => 'Aaron', 'op' => 'test', 'path' => '/name'],
+            ['value' => 'Aaron', 'op' => 'replace', 'path' => '/name']
+        ]);
     }
 
     /** @test */
@@ -26,24 +29,21 @@ class CommitTest extends TestCase
     }
 
     /** @test */
-    public function it_implements_fromJson()
-    {
-        $c = Commit::create(1, $this->patch);
-        $commitAsJson = $c->toJson();
-
-        $commit = Commit::fromJson($commitAsJson);
-
-        $this->assertInstanceOf(Commit::class, $commit);
-
-        $this->assertEquals($commitAsJson, $commit->toJson());
-    }
-
-    /** @test */
     public function it_gets_the_timestamp()
     {
         $commit = Commit::create(1, $this->patch);
 
         $this->assertTrue( is_int($commit->timestamp()) );
+    }
+
+    /** @test */
+    public function timestamp_cannot_be_changed()
+    {
+        $commit = Commit::create(1, $this->patch);
+
+        $commit->timestamp(1234);
+
+        $this->assertFalse(1234 === $commit->timestamp());
     }
 
     /** @test */

@@ -2,7 +2,6 @@
 
 namespace PhpJsonVersioning;
 
-use DomainException;
 use PhpJsonVersioning\Contracts\Patcher;
 
 class VersionManager

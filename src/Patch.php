@@ -11,15 +11,10 @@ class Patch extends SchemaModel implements Iterator, ArrayAccess
 {
     use Loopable, ArrayAccessible;
 
-    protected static $schema = ['$ref' => 'file://' . __DIR__ . '/../schemas/json-patch.json'];
+    protected static $schema = ['$ref' => 'file://' . __DIR__ . '/../schemas/patch.json'];
 
     public function __construct(array $patch)
     {
         parent::__construct($patch);
-    }
-
-    public static function fromJson(string $patch): Patch
-    {
-        return new static(json_decode($patch, 1));
     }
 }
