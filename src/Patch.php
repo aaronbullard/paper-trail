@@ -4,7 +4,6 @@ namespace PhpJsonVersioning;
 
 use ArrayAccess, Iterator;
 use PhpSchema\Traits\Loopable;
-use PhpSchema\Models\SchemaModel;
 use PhpSchema\Traits\ArrayAccessible;
 
 class Patch extends SchemaModel implements Iterator, ArrayAccess

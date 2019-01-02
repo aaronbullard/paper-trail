@@ -2,7 +2,6 @@
 
 namespace PhpJsonVersioning;
 
-use PhpSchema\Models\SchemaModel;
 use PhpSchema\Traits\MethodAccess;
 
 class Commit extends SchemaModel

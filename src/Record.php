@@ -3,7 +3,6 @@
 namespace PhpJsonVersioning;
 
 use DomainException;
-use PhpSchema\Models\SchemaModel;
 use PhpSchema\Traits\MethodAccess;
 class Record extends SchemaModel
 {

@@ -3,7 +3,6 @@
 namespace PhpJsonVersioning\Tests\UnitTests;
 
 use PhpJsonVersioning\Tests\TestCase;
-use PhpSchema\ValidationException;
 use PhpJsonVersioning\Patch;
 use PhpJsonVersioning\Commit;
 use PhpJsonVersioning\Record;

@@ -3,7 +3,7 @@
 namespace PhpJsonVersioning\Tests\UnitTests;
 
 use PhpJsonVersioning\Patch;
-use PhpSchema\ValidationException;
+use PhpJsonVersioning\Exceptions\ValidationException;
 use PhpJsonVersioning\Tests\TestCase;
 
 class PatchTest extends TestCase
