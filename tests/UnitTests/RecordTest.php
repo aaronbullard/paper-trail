@@ -41,6 +41,16 @@ class RecordTest extends TestCase
     }
 
     /** @test */
+    public function it_encodes_to_json_during_to_string()
+    {
+        $json = (string) $this->record;
+
+        $decoded = json_decode($json, 1);
+
+        $this->assertEquals("one", $decoded['commits'][0]['patch'][0]['value']);
+    }
+
+    /** @test */
     public function it_decodes_from_json()
     {
         $json = $this->record->toJson();

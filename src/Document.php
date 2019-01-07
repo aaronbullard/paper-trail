@@ -4,7 +4,16 @@ namespace PhpJsonVersioning;
 
 class Document extends \ArrayObject
 {
-    public static function create(array $doc = null): Document
+    protected $is_array;
+
+    public function __construct($input = [])
+    {
+        $this->is_array = is_array($input);
+        
+        parent::__construct($input, self::ARRAY_AS_PROPS);
+    }
+
+    public static function create($doc = null): Document
     {
         return new static($doc);
     }
@@ -17,6 +26,16 @@ class Document extends \ArrayObject
     public function toJson(): string
     {
         return json_encode($this);
+    }
+
+    public function toObject()
+    {
+        return json_decode($this->toJson());
+    }
+
+    public function getInput()
+    {
+       return $this->is_array ? $this->toArray() : (object) $this->toArray();
     }
 
     /**

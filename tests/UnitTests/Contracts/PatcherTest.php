@@ -46,5 +46,15 @@ class PatcherTest extends TestCase
 
         $this->assertInstanceOf(Document::class, $newDoc);
         $this->assertEquals($this->newDoc->toJson(), $newDoc->toJson());
+        $this->assertNotEquals($this->origDoc->toJson(), $newDoc->toJson());
     }
+
+    /** @test */
+    public function it_does_not_mutate_original_doc()
+    {
+        $newDoc = $this->patcher->apply($this->origDoc, new Patch($this->patch));
+
+        $this->assertNotEquals($this->origDoc->toJson(), $newDoc->toJson());
+    }
+
 }

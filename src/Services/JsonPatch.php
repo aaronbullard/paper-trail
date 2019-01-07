@@ -12,22 +12,30 @@ class JsonPatch implements Patcher
 {
     public function apply(Document $src, Patch $patch): Document
     {
-        $patch = SwaggestJsonPatch::import($patch->toArray());
+        try {
+            $jsonpatch = SwaggestJsonPatch::import($patch->toArray());
 
-        $clone = $src->toArray();
+            $clone = $src->getInput();
 
-        $patch->apply($clone);
-
-        return new Document($clone);
+            $jsonpatch->apply($clone);
+            
+            return new Document($clone);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function diff(Document $src, Document $dst): Patch
     {
-        $diff = new SwaggestJsonDiff(
-            $src->toArray(),
-            $dst->toArray()
-        );
-
+        try {
+            $diff = new SwaggestJsonDiff(
+                $src->getInput(),
+                $dst->getInput()
+            );
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        
         return new Patch($diff->getPatch()->jsonSerialize());
     }
 }

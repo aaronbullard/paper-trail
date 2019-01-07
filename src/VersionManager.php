@@ -53,7 +53,7 @@ class VersionManager
         }
     }
 
-    public function save(Document $doc, string $comment = null): VersionManager
+    public function save(Document $doc, string $comment = null): Record
     {
         $patch = $this->patcher->diff($this->getLatest(), $doc);
 
@@ -61,7 +61,7 @@ class VersionManager
 
         $this->buildVersions();
 
-        return $this;
+        return $this->record;
     }
 
     public function getVersion(int $version): Document
