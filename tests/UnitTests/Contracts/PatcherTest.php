@@ -7,6 +7,7 @@ use PhpJsonVersioning\Document;
 use PhpJsonVersioning\Tests\TestCase;
 use PhpJsonVersioning\Contracts\Patcher;
 use PhpJsonVersioning\Services\JsonPatch;
+use PhpJsonVersioning\Exceptions\PatchingException;
 
 class PatcherTest extends TestCase
 {
@@ -55,6 +56,20 @@ class PatcherTest extends TestCase
         $newDoc = $this->patcher->apply($this->origDoc, new Patch($this->patch));
 
         $this->assertNotEquals($this->origDoc->toJson(), $newDoc->toJson());
+    }
+
+    /** @test */
+    public function it_throws_a_patching_exception()
+    {
+        $this->expectException(PatchingException::class);
+
+        $newDoc = $this->patcher->apply(new Document(), new Patch([
+            [
+                'path' => '/no_such_path',
+                'op' => 'replace',
+                'value' => 'new_name'
+            ]
+        ]));
     }
 
 }

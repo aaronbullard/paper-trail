@@ -7,6 +7,7 @@ use Swaggest\JsonDiff\JsonPatch as SwaggestJsonPatch;
 use PhpJsonVersioning\Patch;
 use PhpJsonVersioning\Document;
 use PhpJsonVersioning\Contracts\Patcher;
+use PhpJsonVersioning\Exceptions\PatchingException;
 
 class JsonPatch implements Patcher
 {
@@ -21,7 +22,7 @@ class JsonPatch implements Patcher
             
             return new Document($clone);
         } catch (\Throwable $e) {
-            throw $e;
+            throw PatchingException::from($e);
         }
     }
 
@@ -33,7 +34,7 @@ class JsonPatch implements Patcher
                 $dst->getInput()
             );
         } catch (\Throwable $e) {
-            throw $e;
+            throw PatchingException::from($e);
         }
         
         return new Patch($diff->getPatch()->jsonSerialize());

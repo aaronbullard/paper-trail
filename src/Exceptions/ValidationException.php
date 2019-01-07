@@ -2,9 +2,9 @@
 
 namespace PhpJsonVersioning\Exceptions;
 
-use PhpSchema\ValidationException as Bob;
+use PhpSchema\ValidationException as PhpSchemaValidationException;
 
-class ValidationException extends Bob
+class ValidationException extends PhpSchemaValidationException
 {
 
 }
