@@ -4,7 +4,7 @@ namespace PhpJsonVersioning\Tests;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
-class TestCase extends PHPUnitTestCase
+abstract class TestCase extends PHPUnitTestCase
 {
 
 }

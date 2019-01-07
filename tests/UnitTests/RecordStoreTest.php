@@ -7,10 +7,10 @@ use PhpJsonVersioning\Patch;
 use PhpJsonVersioning\Commit;
 use PhpJsonVersioning\Record;
 use PhpJsonVersioning\Document;
-use PhpJsonVersioning\VersionManager;
+use PhpJsonVersioning\RecordStore;
 use PhpJsonVersioning\Services\JsonPatch;
 
-class VersionManagerTest extends TestCase
+class RecordStoreTest extends TestCase
 {
     protected $patcher;
 
@@ -38,7 +38,7 @@ class VersionManagerTest extends TestCase
  
         $this->patcher = new JsonPatch();
 
-        $this->manager = new VersionManager($this->patcher);
+        $this->manager = new RecordStore($this->patcher);
         $this->manager->load($this->record);
     }
 
@@ -46,11 +46,11 @@ class VersionManagerTest extends TestCase
     public function it_has_a_helper_constructor()
     {
         // with no record
-        $manager = VersionManager::create();
+        $manager = RecordStore::create();
         $this->assertCount(0, $manager->getRecord()->commits());
 
         // with record
-        $manager = VersionManager::create($this->record);
+        $manager = RecordStore::create($this->record);
         $this->assertCount(3, $manager->getRecord()->commits());
     }
 
@@ -90,7 +90,7 @@ class VersionManagerTest extends TestCase
     /** @test */
     public function it_creates_a_record_for_first_save()
     {
-        $manager = new VersionManager($this->patcher);
+        $manager = new RecordStore($this->patcher);
 
         $manager->save(new Document(['version' => 'one']), "version one");
 
