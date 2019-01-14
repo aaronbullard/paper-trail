@@ -40,7 +40,7 @@ class RecordStoreTest extends TestCase
 
         $this->manager = new RecordStore($this->patcher);
         $this->manager->load($this->record);
-    }
+    } 
 
     /** @test */
     public function it_has_a_helper_constructor()
