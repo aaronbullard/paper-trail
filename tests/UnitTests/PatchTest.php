@@ -1,10 +1,10 @@
 <?php
 
-namespace PhpJsonVersioning\Tests\UnitTests;
+namespace PaperTrail\Tests\UnitTests;
 
-use PhpJsonVersioning\Patch;
-use PhpJsonVersioning\Exceptions\ValidationException;
-use PhpJsonVersioning\Tests\TestCase;
+use PaperTrail\Patch;
+use PaperTrail\Exceptions\ValidationException;
+use PaperTrail\Tests\TestCase;
 
 class PatchTest extends TestCase
 {

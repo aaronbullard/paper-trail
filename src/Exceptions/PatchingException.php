@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpJsonVersioning\Exceptions;
+namespace PaperTrail\Exceptions;
 
 class PatchingException extends \RuntimeException
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpJsonVersioning;
+namespace PaperTrail;
 
 use ArrayAccess, Iterator;
 use PhpSchema\Traits\Loopable;

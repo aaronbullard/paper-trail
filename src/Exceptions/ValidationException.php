@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpJsonVersioning\Exceptions;
+namespace PaperTrail\Exceptions;
 
 use PhpSchema\ValidationException as PhpSchemaValidationException;
 

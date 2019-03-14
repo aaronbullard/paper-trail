@@ -1,9 +1,9 @@
 <?php
 
-namespace PhpJsonVersioning\Contracts;
+namespace PaperTrail\Contracts;
 
-use PhpJsonVersioning\Patch;
-use PhpJsonVersioning\Document;
+use PaperTrail\Patch;
+use PaperTrail\Document;
 
 interface Patcher
 {

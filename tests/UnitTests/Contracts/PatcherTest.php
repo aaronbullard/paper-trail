@@ -1,13 +1,13 @@
 <?php
 
-namespace PhpJsonVersioning\Tests\UnitTests\Contracts;
+namespace PaperTrail\Tests\UnitTests\Contracts;
 
-use PhpJsonVersioning\Patch;
-use PhpJsonVersioning\Document;
-use PhpJsonVersioning\Tests\TestCase;
-use PhpJsonVersioning\Contracts\Patcher;
-use PhpJsonVersioning\Services\JsonPatch;
-use PhpJsonVersioning\Exceptions\PatchingException;
+use PaperTrail\Patch;
+use PaperTrail\Document;
+use PaperTrail\Tests\TestCase;
+use PaperTrail\Contracts\Patcher;
+use PaperTrail\Services\JsonPatch;
+use PaperTrail\Exceptions\PatchingException;
 
 class PatcherTest extends TestCase
 {

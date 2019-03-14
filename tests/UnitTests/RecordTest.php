@@ -1,11 +1,11 @@
 <?php
 
-namespace PhpJsonVersioning\Tests\UnitTests;
+namespace PaperTrail\Tests\UnitTests;
 
-use PhpJsonVersioning\Tests\TestCase;
-use PhpJsonVersioning\Patch;
-use PhpJsonVersioning\Commit;
-use PhpJsonVersioning\Record;
+use PaperTrail\Tests\TestCase;
+use PaperTrail\Patch;
+use PaperTrail\Commit;
+use PaperTrail\Record;
 
 class RecordTest extends TestCase
 {

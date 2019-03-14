@@ -1,14 +1,14 @@
 <?php
 
-namespace PhpJsonVersioning\Tests\UnitTests;
+namespace PaperTrail\Tests\UnitTests;
 
-use PhpJsonVersioning\Tests\TestCase;
-use PhpJsonVersioning\Patch;
-use PhpJsonVersioning\Commit;
-use PhpJsonVersioning\Record;
-use PhpJsonVersioning\Document;
-use PhpJsonVersioning\RecordStore;
-use PhpJsonVersioning\Services\JsonPatch;
+use PaperTrail\Tests\TestCase;
+use PaperTrail\Patch;
+use PaperTrail\Commit;
+use PaperTrail\Record;
+use PaperTrail\Document;
+use PaperTrail\RecordStore;
+use PaperTrail\Services\JsonPatch;
 
 class RecordStoreTest extends TestCase
 {

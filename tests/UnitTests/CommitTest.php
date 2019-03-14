@@ -1,10 +1,10 @@
 <?php
 
-namespace PhpJsonVersioning\Tests\UnitTests;
+namespace PaperTrail\Tests\UnitTests;
 
-use PhpJsonVersioning\Tests\TestCase;
-use PhpJsonVersioning\Patch;
-use PhpJsonVersioning\Commit;
+use PaperTrail\Tests\TestCase;
+use PaperTrail\Patch;
+use PaperTrail\Commit;
 
 class CommitTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpJsonVersioning\Tests;
+namespace PaperTrail\Tests;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 

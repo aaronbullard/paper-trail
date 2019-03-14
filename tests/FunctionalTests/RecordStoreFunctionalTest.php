@@ -1,11 +1,11 @@
 <?php
 
-namespace PhpJsonVersioning\Tests\FunctionalTests;
+namespace PaperTrail\Tests\FunctionalTests;
 
-use PhpJsonVersioning\Tests\TestCase;
-use PhpJsonVersioning\Record;
-use PhpJsonVersioning\Document;
-use PhpJsonVersioning\RecordStore;
+use PaperTrail\Tests\TestCase;
+use PaperTrail\Record;
+use PaperTrail\Document;
+use PaperTrail\RecordStore;
 
 class RecordStoreFunctionalTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpJsonVersioning;
+namespace PaperTrail;
 
 use PhpSchema\Traits\MethodAccess;
 

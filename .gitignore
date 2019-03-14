@@ -1,2 +1,5 @@
 /vendor
+/coverage
+/tests/summary.txt
+compsoser.lock
 .DS_Store

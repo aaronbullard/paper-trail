@@ -1,9 +1,9 @@
 <?php
 
-namespace PhpJsonVersioning;
+namespace PaperTrail;
 
-use PhpJsonVersioning\Contracts\Patcher;
-use PhpJsonVersioning\Services\JsonPatch;
+use PaperTrail\Contracts\Patcher;
+use PaperTrail\Services\JsonPatch;
 
 class RecordStore
 {

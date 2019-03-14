@@ -1,9 +1,9 @@
 <?php
 
-namespace PhpJsonVersioning\Tests\UnitTests;
+namespace PaperTrail\Tests\UnitTests;
 
-use PhpJsonVersioning\Tests\TestCase;
-use PhpJsonVersioning\Document;
+use PaperTrail\Tests\TestCase;
+use PaperTrail\Document;
 
 class DocumentTest extends TestCase
 {

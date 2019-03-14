@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpJsonVersioning;
+namespace PaperTrail;
 
 use DomainException;
 use PhpSchema\Traits\MethodAccess;

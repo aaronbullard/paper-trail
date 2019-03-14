@@ -1,13 +1,13 @@
 <?php
 
-namespace PhpJsonVersioning\Services;
+namespace PaperTrail\Services;
 
 use Swaggest\JsonDiff\JsonDiff as SwaggestJsonDiff;
 use Swaggest\JsonDiff\JsonPatch as SwaggestJsonPatch;
-use PhpJsonVersioning\Patch;
-use PhpJsonVersioning\Document;
-use PhpJsonVersioning\Contracts\Patcher;
-use PhpJsonVersioning\Exceptions\PatchingException;
+use PaperTrail\Patch;
+use PaperTrail\Document;
+use PaperTrail\Contracts\Patcher;
+use PaperTrail\Exceptions\PatchingException;
 
 class JsonPatch implements Patcher
 {
