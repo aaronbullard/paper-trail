@@ -26,6 +26,16 @@ class RecordStore
         return new static(new JsonPatch(), $record);
     }
 
+    public static function fromJson(string $jsonRecord = null): RecordStore
+    {
+        return static::create(Record::fromJson($jsonRecord));
+    }
+
+    public function toJson(): string
+    {
+        return $this->getRecord()->toJson();
+    }
+
     public function load(Record $record): RecordStore
     {
         $this->record = $record;
@@ -53,8 +63,12 @@ class RecordStore
         }
     }
 
-    public function save(Document $doc, string $comment = null): Record
+    public function save($doc, string $comment = null): Record
     {
+        if (false == $doc instanceof Document){
+            $doc = Document::create($doc);
+        }
+
         $patch = $this->patcher->diff($this->getLatest(), $doc);
 
         $this->record->createCommit($patch, $comment);
