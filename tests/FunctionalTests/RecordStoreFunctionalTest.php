@@ -3,8 +3,6 @@
 namespace PaperTrail\Tests\FunctionalTests;
 
 use PaperTrail\Tests\TestCase;
-use PaperTrail\Record;
-use PaperTrail\Document;
 use PaperTrail\RecordStore;
 
 class RecordStoreFunctionalTest extends TestCase
